@@ -24,10 +24,10 @@ public class WebSecurityConfig {
 				.anyRequest().hasRole("USER")
 				//.anyRequest().authenticated()
 			)
-//			.formLogin((form) -> form
-//				.loginPage("/login")
-//				.permitAll()
-//			)
+			.formLogin((form) -> form
+				.loginPage("/login")
+				.permitAll()
+			)
 			.logout((logout) -> logout.permitAll());
 		return http.build();
 	}
