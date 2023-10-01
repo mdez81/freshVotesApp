@@ -7,14 +7,14 @@ import jakarta.persistence.Entity;
 @Entity
 public class Comment {
 
-	private CommnetId pk;
+	private CommentId pk;
 	private String text;
 	
 	@EmbeddedId
-	public CommnetId getPk() {
+	public CommentId getPk() {
 		return pk;
 	}
-	public void setPk(CommnetId pk) {
+	public void setPk(CommentId pk) {
 		this.pk = pk;
 	}
 	

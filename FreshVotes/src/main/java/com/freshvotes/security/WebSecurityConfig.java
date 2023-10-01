@@ -7,43 +7,60 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+	
+	@Bean
+	 PasswordEncoder getPasswordEncoder(){
+		return new BCryptPasswordEncoder();		
+		}
 
 	@Bean
 	 SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			//.csrf().disable()
-			.csrf(csrf -> csrf.disable())
+			//.csrf(csrf -> csrf.disable()) -- enable it
 			.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/index").permitAll()
+				.requestMatchers("/**").permitAll()
+				//.requestMatchers("/login").permitAll()
 				.anyRequest().hasRole("USER")
-				//.anyRequest().authenticated()
+				//.anyRequest().authenticated()	
 			)
 			.formLogin((form) -> form
-				.loginPage("/login")
+				.loginPage("/login")	
+//				.loginProcessingUrl("/login")
+               .defaultSuccessUrl("/dashboard")
 				.permitAll()
 			)
-			.logout((logout) -> logout.permitAll());
+			.logout((logout) -> logout.permitAll()); //.logoutUrl("/logout")
 		return http.build();
 	}
 
 	@Bean
 	 UserDetailsService users() {
 		UserDetails user = User.builder()
-			.username("mdez@test.com")
-			.password("asdfasdf")
+			.username("user")
+			//.password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+			.password(getPasswordEncoder().encode("password"))
 			.roles("USER")
 			.build();
 //		UserDetails admin = User.builder()
 //			.username("admin")
-//			.password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+//			//.password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+//			.password(getPasswordEncoder().encode("password"))
 //			.roles("USER", "ADMIN")
 //			.build();
 		return new InMemoryUserDetailsManager(user); //, admin
 	}
-}
+		
+ }
+
+	
+	
+	
+

@@ -6,7 +6,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.ManyToOne;
 
 @Embeddable
-public class CommnetId implements Serializable{
+public class CommentId implements Serializable{
 
 	/**
 	 * 
